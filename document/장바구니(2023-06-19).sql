@@ -102,7 +102,7 @@ SELECT MAX(buid) FROM tbl_buyer;
 SELECT MIN(buid) FROM tbl_buyer;
 
 
-
+SELECT * FROM tbl_product;
 
 
 

@@ -1,7 +1,6 @@
 package com.marpol.iolist.service.impl;
 
 import java.util.List;
-
 import java.util.Scanner;
 
 import com.marpol.iolist.config.DBConnection;
@@ -169,15 +168,63 @@ public class ProductServiceImplV1 implements ProductService {
 		System.out.printf("%s\t", productDto.pName);
 		System.out.printf("%s\t", productDto.pItem);
 		System.out.printf("%s\t", productDto.getIPrice());
-		System.out.printf("%s\t", productDto.pOPrice);
+		System.out.printf("%s\n", productDto.pOPrice);
 	}
 
 	public ProductDto findByPCode() {
-		return null;
+
+		while (true) {
+
+			System.out.println(Line.dLine(70));
+			System.out.println("상품정보를 확인합니다.");
+			System.out.println("상품코드를 입력해 주세요 QUIT : 종료");
+			System.out.print("상품코드 >> ");
+			String strPCode = scan.nextLine();
+			if (strPCode.isBlank()) {
+				HelpMessage.ERROR("상품코드을 입력해주세요");
+				continue;
+			} else if (strPCode.equals("QUIT")) {
+				return null;
+			}
+
+			ProductDto productDto = proDao.findById(strPCode);
+			if (productDto == null) {
+				HelpMessage.ERROR(String.format("상품코드를 찾을 수 없습니다. (%s) ", strPCode));
+			} else if (productDto != null) {
+				printProduct(productDto);
+				return productDto;
+			}
+		}
 	}
 
 	public ProductDto findByPName() {
-		return null;
+
+		while (true) {
+
+			System.out.println(Line.dLine(70));
+			System.out.println("상품정보를 확인합니다.");
+			System.out.println("상품이름을 입력해 주세요 QUIT : 종료");
+			System.out.print("상품이름 >> ");
+			String strPName = scan.nextLine();
+			if (strPName.isBlank()) {
+				HelpMessage.ERROR("상품이름을 입력해주세요");
+				continue;
+			} else if (strPName.equals("QUIT")) return null;
+				
+			List<ProductDto> productList = proDao.findByPName(strPName);
+				if(productList.isEmpty()) {
+					HelpMessage.ERROR(String.format("상품이름을 찾을수 없습니다. (%s) ", strPName));
+				} else if ( productList.size() < 2) {
+					return productList.get(0);
+				}
+				this.printList(productList);
+				
+				ProductDto productDto = this.findByPCode();
+				if(productDto != null) return productDto;
+			}
+							
+
+		}
+
 	}
 
-}
